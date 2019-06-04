@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>features.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ConnectionManager.html">ConnectionManager</a><ul class='methods'><li data-type='method'><a href="ConnectionManager.html#attach">attach</a></li><li data-type='method'><a href="ConnectionManager.html#connect">connect</a></li><li data-type='method'><a href="ConnectionManager.html#detach">detach</a></li><li data-type='method'><a href="ConnectionManager.html#disconnect">disconnect</a></li></ul></li><li><a href="Device.html">Device</a><ul class='methods'><li data-type='method'><a href="Device.html#command">command</a></li></ul></li><li><a href="DeviceManager.html">DeviceManager</a><ul class='methods'><li data-type='method'><a href="DeviceManager.html#attach">attach</a></li><li data-type='method'><a href="DeviceManager.html#connect">connect</a></li><li data-type='method'><a href="DeviceManager.html#detach">detach</a></li><li data-type='method'><a href="DeviceManager.html#disconnect">disconnect</a></li></ul></li><li><a href="MessageChannel.html">MessageChannel</a><ul class='methods'><li data-type='method'><a href="MessageChannel.html#~close">close</a></li><li data-type='method'><a href="MessageChannel.html#~sendFrame">sendFrame</a></li><li data-type='method'><a href="MessageChannel.html#~sendMessage">sendMessage</a></li></ul></li><li><a href="NetworkConnector.html">NetworkConnector</a><ul class='methods'><li data-type='method'><a href="NetworkConnector.html#connect">connect</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="module-Frame.html">Frame</a><ul class='methods'><li data-type='method'><a href="module-Frame.html#.pack">pack</a></li><li data-type='method'><a href="module-Frame.html#.upack">upack</a></li></ul></li><li><a href="module-Message.html">Message</a><ul class='methods'><li data-type='method'><a href="module-Message.html#.pack">pack</a></li><li data-type='method'><a href="module-Message.html#.unpack">unpack</a></li></ul></li></ul><h3>Events</h3><ul><li><a href="ConnectionManager.html#event:attached">attached</a></li><li><a href="ConnectionManager.html#event:connected">connected</a></li><li><a href="ConnectionManager.html#event:connecting">connecting</a></li><li><a href="ConnectionManager.html#event:detached">detached</a></li><li><a href="ConnectionManager.html#event:disconnected">disconnected</a></li><li><a href="ConnectionManager.html#event:error">error</a></li><li><a href="DeviceManager.html#event:connected">connected</a></li><li><a href="MessageChannel.html#event:close">close</a></li><li><a href="MessageChannel.html#event:navdata">navdata</a></li><li><a href="MessageChannel.html#event:navdata-event">navdata-event</a></li><li><a href="MessageChannel.html#event:timeout">timeout</a></li></ul><h3>Global</h3><ul><li><a href="global.html#ARDrone3">ARDrone3</a></li><li><a href="global.html#DroneManager">DroneManager</a></li><li><a href="global.html#Feature">Feature</a></li><li><a href="global.html#RC">RC</a></li><li><a href="global.html#SkyController">SkyController</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">features.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*
+ * Copyright 2017-2019 Tom Swindell
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+ */
+
+const FEATURE_IDS = {
+  0x00: 'common',
+  0x01: 'ardrone3',
+  0x04: 'skyctrl',
+  0x85: 'generic',
+  0x86: 'followme',
+  0x87: 'wifi',
+  0x88: 'rc',
+  0x89: 'drone_manager',
+  0x8a: 'mapper',
+  0x8b: 'debug',
+  0x8c: 'controller_info',
+  0x8f: 'camera',
+  0x90: 'animation',
+  0x91: 'user_storage',
+  0x92: 'rth',
+  0x94: 'gimbal',
+  0x95: 'battery',
+  0x96: 'mediastore',
+  0x97: 'precise_home',
+}
+
+const FEATURE_CLASSES = {
+  0x01: ARDrone3,
+  0x04: SkyController,
+  0x88: RC,
+  0x89: DroneManager,
+}
+
+/**
+ * @public
+ * 
+ * @param {*} __uid 
+ * @param {*} __device 
+ */
+function Feature (__fId, __device) {
+  this.uid = __device.uid + '/' + FEATURE_IDS[__fId] || 'unknown'
+  this.type = this.constructor.name
+  this.device = __device
+}
+
+/**
+ * 
+ */
+Feature.prototype.init = async function () { }
+
+/**
+ * 
+ */
+Feature.prototype.toJSON = function () {
+  return { uid: this.uid, type: this.type, navlink: this.device.uid }
+}
+
+/**
+ * @public
+ * 
+ * @param {*} __device 
+ */
+function ARDrone3 (__device) {
+  const __feature_id = 0x01
+
+  Feature.call(this, __feature_id, __device)
+
+  this.type = 'ardrone3'
+
+  const __state = {}
+
+  const onMessage = (message) => {
+    if (message.featureId !== __feature_id) return
+    __state[message.path.split('.').slice(1).join('.')] = message.params
+  }
+
+  this.init = async () => {
+    // Request SkyController state and settings.
+    await Promise.all([
+        __device.message('common.Common.AllStates'),
+        __device.message('common.Settings.AllSettings')
+      ])
+      .then(([ states, settings ]) => {
+        states.forEach(onMessage)
+        settings.forEach(onMessage)
+
+        __device.on('message', onMessage)
+      })
+  }
+
+  /**
+   * 
+   */
+  this.toJSON = () => (
+    Object.assign(Feature.prototype.toJSON.call(this), __state)
+  )
+}
+ARDrone3.prototype = Object.create(Feature.prototype)
+
+/**
+ * @public
+ * 
+ * @param {*} __device 
+ */
+function SkyController (__device) {
+  const __feature_id = 0x04
+
+  Feature.call(this, __feature_id, __device)
+
+  this.type = 'SkyController'
+
+  const __state = {}
+
+  /**
+   * 
+   * @param {*} message 
+   */
+  const onMessage = (message) => {
+    if (message.featureId !== __feature_id) return
+    __state[message.path.split('.').slice(1).join('.')] = message.params
+  }
+
+  /**
+   * 
+   */
+  this.init = async () => {
+    // Request SkyController state and settings.
+    await Promise.all([
+        __device.message('skyctrl.Common.AllStates'),
+        __device.message('skyctrl.Settings.AllSettings')
+      ])
+      .then(([states, settings]) => {
+        states.forEach(onMessage)
+        settings.forEach(onMessage)
+
+        __device.on('message', onMessage)
+      })
+      .catch(e => console.error(e))
+  }
+
+  /**
+   * 
+   */
+  this.toJSON = () => (
+    Object.assign(Feature.prototype.toJSON.call(this), __state)
+  )
+}
+SkyController.prototype = Object.create(Feature.prototype)
+
+/**
+ * @public
+ * 
+ * @param {*} __device 
+ */
+function RC (__device) {
+  const __feature_id = 0x88
+
+  Feature.call(this, __feature_id, __device)
+
+  this.type = 'RC'
+
+  const __state = {}
+
+  const onMessage = (message) => {
+    if (message.featureId !== __feature_id) return
+    __state[message.path.split('.').slice(1).join('.')] = message.params
+  }
+
+  this.init = async () => {
+    __device.on('message', onMessage)
+  }
+}
+RC.prototype = Object.create(Feature.prototype)
+
+/**
+ * @public
+ * 
+ * @param {*} __device 
+ */
+function DroneManager (__device) {
+  const __feature_id = 0x89
+
+  Feature.call(this, __feature_id, __device)
+
+  this.type = 'DroneManager'
+
+  const __state = {}
+
+  /**
+   * 
+   * @param {*} message 
+   */
+  const onMessage = (mesg) => {
+    if (mesg.featureId !== __feature_id) return
+    const minfo = mesg.info
+    const prop = mesg.path.split('.')[2]
+
+    if (minfo.messageType === 'event' &amp;&amp; minfo.event.type &amp;&amp;
+        minfo.event.type.startsWith('MAP_ITEM:')) {
+      const key = mesg.info.event.type.split(':')[1]
+
+      if (!__state[prop]) __state[prop] = {}
+
+      __state[prop][mesg.params[key]] = mesg.params
+      return
+    }
+
+    __state[prop] = mesg.params
+  }
+
+  /**
+   * 
+   */
+  this.init = async () => {
+    __device.on('message', onMessage)
+  }
+
+  /**
+   * 
+   */
+  this.toJSON = () => (
+    Object.assign(Feature.prototype.toJSON.call(this), __state)
+  )
+}
+DroneManager.prototype = Object.create(Feature.prototype)
+
+module.exports = {
+  FEATURE_CLASSES,
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.2</a> on Wed Jun 05 2019 15:58:36 GMT+0100 (British Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>
